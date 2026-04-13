@@ -67,10 +67,12 @@
                         "inverse-surface": "#303032"
                     },
                     borderRadius: {
-                        DEFAULT: "0.25rem",
-                        lg: "0.5rem",
-                        xl: "0.75rem",
-                        full: "9999px"
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "3xl": "2rem",
+                        "full": "9999px"
                     },
                     fontFamily: {
                         headline: ["Inter"],
@@ -88,9 +90,10 @@
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
         .no-line-rule {
@@ -109,6 +112,24 @@
         /* Smooth scrolling */
         html {
             scroll-behavior: smooth;
+        }
+
+
+        .testimonial-slider {
+            scroll-snap-type: x mandatory;
+        }
+
+        .testimonial-card {
+            scroll-snap-align: center;
+        }
+
+        /* Centered Editorial Container */
+        .editorial-container {
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
         }
 
         /* Hide scrollbar for carousel */
@@ -559,6 +580,58 @@
         .form-success {
             animation: fadeInUp 0.5s ease-out;
         }
+
+        /* ===== UNIVERSAL: Hover Aurora Border ===== */
+        /* Subtle 1.5px spinning gradient border — activates on hover */
+        .hover-aurora {
+            position: relative;
+        }
+
+        .hover-aurora::before {
+            content: '';
+            position: absolute;
+            inset: -1.5px;
+            border-radius: inherit;
+            padding: 1.5px;
+            background: conic-gradient(from var(--aurora-angle, 0deg),
+                    transparent 40%,
+                    #7c3aed 55%,
+                    #22d3ee 65%,
+                    #6cf8bb 72%,
+                    transparent 85%);
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .hover-aurora:hover::before {
+            opacity: 1;
+            animation: aurora-spin 3s linear infinite;
+        }
+
+        @property --aurora-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes aurora-spin {
+            from {
+                --aurora-angle: 0deg;
+            }
+
+            to {
+                --aurora-angle: 360deg;
+            }
+        }
     </style>
 </head>
 
@@ -574,6 +647,8 @@
         <div class="hidden md:flex items-center gap-8">
             <a class="nav-link active text-sm font-sans tracking-tight transition-all duration-300"
                 href="#work">Work</a>
+            <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
+                href="projects.html">Projects</a>
             <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
                 href="#expertise">Expertise</a>
             <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
@@ -609,6 +684,8 @@
         <a class="text-2xl font-bold text-on-surface hover:text-primary transition-colors mobile-nav-link"
             href="#work">Work</a>
         <a class="text-2xl font-bold text-on-surface hover:text-primary transition-colors mobile-nav-link"
+            href="projects.html">Projects</a>
+        <a class="text-2xl font-bold text-on-surface hover:text-primary transition-colors mobile-nav-link"
             href="#expertise">Expertise</a>
         <a class="text-2xl font-bold text-on-surface hover:text-primary transition-colors mobile-nav-link"
             href="#process">Process</a>
@@ -634,7 +711,7 @@
         <div class="floating-particle" style="left: 85%; top: 50%; --duration: 6s; --delay: 0.5s;"></div>
         <div class="floating-particle" style="left: 50%; top: 80%; --duration: 5.5s; --delay: 1.5s;"></div>
         <div class="floating-particle" style="left: 40%; top: 15%; --duration: 8s; --delay: 3s;"></div>
-        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center md:px-12 lg:px-20">
+        <div class="editorial-container grid lg:grid-cols-2 gap-16 items-center">
             <div class="z-10">
                 <span
                     class="animate-fade-in-up inline-block px-4 py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-mono text-[10px] uppercase tracking-widest mb-6 typing-cursor">Available
@@ -683,16 +760,14 @@
                 <div class="relative grid grid-cols-2 gap-4 -rotate-6 scale-110 animate-float tilt-card" id="hero-tilt">
                     <div class="glass-card p-2 rounded-2xl shadow-xl transform translate-y-8">
                         <div class="aspect-[9/16] rounded-xl overflow-hidden bg-surface-container">
-                            <img class="w-full h-full object-cover"
-                                alt="Vibrant abstract 3D digital art with swirling neon lines and cinematic lighting"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuADWB9UWJBDpDqZ1v3uyY6Vu8rwVC1Wv4KxPVxMofwHcvjusBLCOOdRzZVnhijiF5LqoUzUbvh_KWZB79XgxYya9qvQbb8lcdlbrMwaTE7rsBfSxm9n4nXHDt8aksw7p3_UGqlpbHfXgOlfkopsJmk7ZieFs7bPL7cIL4WQrYkL4MtHXxQgVVJJZmWbdmGLn4V5sbDHOHhDPrNtd2L4uOfnzBUPI0OkgL44-nIY74NRfyDAJHe_5Y0SNjuZf11Di-Se70kSSatmpUM" />
+                            <video class="w-full h-full object-cover hero-random-video" autoplay muted playsinline
+                                src="https://video.wixstatic.com/video/ef49f5_fc1cbb26ca524797a4cf799d9e1893d3/1080p/mp4/file.mp4"></video>
                         </div>
                     </div>
                     <div class="glass-card p-2 rounded-2xl shadow-xl">
                         <div class="aspect-[9/16] rounded-xl overflow-hidden bg-surface-container">
-                            <img class="w-full h-full object-cover"
-                                alt="Sleek modern architecture with minimalist lines at golden hour"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3E4-yWKA5-c9lE1JcrKeHsMM0EYW1GoszUhlJ5r1FQP3piEGrI5PecGixhr1GrobzL-uQ1V6W5nm_6g8AAeMBaV_rs4UkIUVeenLTRl3blXayLU9gayurf0oE6b8AojR58ANqQYQBfRLCzL0L61SPlH5cjIw2oIP0KdNTEEFFpTwICgtO2te2zqSS-oBKNeFf2QZyLPD3uGhnodz2_sC7kmVy0MDleXMZ_5a4cfNLIyNMJl5wftZ42iipM-dZFG3fhhIv49dDfjY" />
+                            <video class="w-full h-full object-cover hero-random-video" autoplay muted playsinline
+                                src="https://video.wixstatic.com/video/ef49f5_5ef7e0f6cfb4481e8312c0ee50b634f0/1080p/mp4/file.mp4"></video>
                         </div>
                     </div>
                     <div
@@ -701,11 +776,28 @@
                 </div>
             </div>
         </div>
-    </header>
+    </header>\n
+    <!-- Company Logos Section -->
+    <section class="py-12 border-y border-outline-variant/10">
+        <div class="editorial-container">
+            <h2 class="text-center font-mono text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-10">
+                Trusted By Forward-Thinking Teams</h2>
+            <div
+                class="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-40 grayscale hover:opacity-100 transition-opacity">
+                <span class="font-headline text-2xl font-black italic tracking-tighter">TECHFLOW</span>
+                <span class="font-headline text-2xl font-bold tracking-tight">VELOCITY</span>
+                <span class="font-headline text-xl font-medium uppercase tracking-widest">Aura.</span>
+                <span class="font-headline text-2xl font-extrabold">PRISM</span>
+                <span class="font-headline text-xl font-light italic">ZenithAI</span>
+                <span class="font-headline text-2xl font-semibold border-2 border-black px-2">NEXT</span>
+            </div>
+        </div>
+    </section>
+
 
     <!-- Featured Reel Showcase -->
     <section class="py-24 bg-surface-container-low" id="work">
-        <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
+        <div class="editorial-container">
             <div class="flex justify-between items-end mb-12 reveal">
                 <div>
                     <h2 class="text-3xl font-bold tracking-tight mb-2">Featured Reels</h2>
@@ -790,8 +882,164 @@
     </section>
 
     <!-- About Section -->
+
+    <!-- Redesigned Social Proof Section -->
+    <section class="py-24 bg-surface">
+        <div class="editorial-container">
+            <div class="grid lg:grid-cols-2 gap-12">
+                <!-- Instagram Feed Redesign -->
+                <div class="bg-white rounded-[2.5rem] border border-outline-variant/10 overflow-hidden shadow-2xl">
+                    <div class="p-6 border-b border-outline-variant/10">
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="w-16 h-16 rounded-full bg-gradient-to-tr from-yellow-400 via-red-500 to-purple-600 p-[2px]">
+                                    <div class="w-full h-full rounded-full bg-white p-[2px]">
+                                        <img alt="profile" class="w-full h-full rounded-full object-cover"
+                                            src="https://static.wixstatic.com/media/f361dc_4710b182026249938453044439fc67c5~mv2.png/v1/fill/w_665,h_928,fp_0.73_0.34,q_90,enc_avif,quality_auto/rectify234_a_spreadsheet_of_prospects_hovering_in_the_air_in__ee71fcde-cb77-4478-95b7-deaf.png" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-lg">ali_ai_growth</h3>
+                                    <p class="text-sm text-on-surface-variant">AI Content Strategist</p>
+                                </div>
+                            </div>
+                            <button
+                                class="bg-primary text-on-primary px-6 py-2 rounded-lg font-bold text-sm">Follow</button>
+                        </div>
+                        <div class="flex gap-8 text-center border-t border-outline-variant/10 pt-4">
+                            <div>
+                                <div class="font-bold">142</div>
+                                <div class="text-[10px] uppercase tracking-widest text-on-surface-variant">Posts</div>
+                            </div>
+                            <div>
+                                <div class="font-bold">6,428</div>
+                                <div class="text-[10px] uppercase tracking-widest text-on-surface-variant">Followers
+                                </div>
+                            </div>
+                            <div>
+                                <div class="font-bold">384</div>
+                                <div class="text-[10px] uppercase tracking-widest text-on-surface-variant">Following
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-[2px] bg-outline-variant/10 p-[1px]">
+                        <div class="aspect-square relative group cursor-pointer">
+                            <img alt="reel" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3E4-yWKA5-c9lE1JcrKeHsMM0EYW1GoszUhlJ5r1FQP3piEGrI5PecGixhr1GrobzL-uQ1V6W5nm_6g8AAeMBaV_rs4UkIUVeenLTRl3blXayLU9gayurf0oE6b8AojR58ANqQYQBfRLCzL0L61SPlH5cjIw2oIP0KdNTEEFFpTwICgtO2te2zqSS-oBKNeFf2QZyLPD3uGhnodz2_sC7kmVy0MDleXMZ_5a4cfNLIyNMJl5wftZ42iipM-dZFG3fhhIv49dDfjY" />
+                            <div
+                                class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                <span class="material-symbols-outlined text-white">play_circle</span>
+                            </div>
+                        </div>
+                        <div class="aspect-square relative group cursor-pointer">
+                            <img alt="reel" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuADWB9UWJBDpDqZ1v3uyY6Vu8rwVC1Wv4KxPVxMofwHcvjusBLCOOdRzZVnhijiF5LqoUzUbvh_KWZB79XgxYya9qvQbb8lcdlbrMwaTE7rsBfSxm9n4nXHDt8aksw7p3_UGqlpbHfXgOlfkopsJmk7ZieFs7bPL7cIL4WQrYkL4MtHXxQgVVJJZmWbdmGLn4V5sbDHOHhDPrNtd2L4uOfnzBUPI0OkgL44-nIY74NRfyDAJHe_5Y0SNjuZf11Di-Se70kSSatmpUM" />
+                        </div>
+                        <div class="aspect-square relative group cursor-pointer">
+                            <img alt="reel" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz5AqgGiEXCS2U5teIWPmLIzEnrP2Zr1CQrtsZbsSnQtWG5NipxufDeVYW8ZTGD2I0ToL6DFvn1wQgKK4PCDhSHeVPQyAyCsqGf0J-W2ZroJO9Rjw3yn270-OGMjvXe4_Ac607LRI9oT1m2_WEsjcVnrNHj4eP7knytBUoEMe9wHLjM2eYkK_FncExfJxG986oeIPwsO5mDFiq1jS1W6YjT_joOnubamdRxI7UZafYVVb6hMgCukRgOtyUKORMDx2dIoJCriA_Uwc" />
+                        </div>
+                        <div class="aspect-square relative group cursor-pointer">
+                            <img alt="reel" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKhl2w4YT0zA1AJVb8618qO-gceGcBs7xJOPrhDAEF039DulYJuToWELdz1eIjQkwm3mHy8CrXqsMeEdrz0VXcLj1ojGQHOUJ-OCEMZupXVtwJsKFUobD14t_2122XmGDOClLtV1TmYJNcKVbsiyo8hLk82E6BRxy5gAYcqW1jorYZOtE8svxzfvEuQJQOtuGowNtY3dPOU7Kom8IPldl5L5cDK-VDo_1AeGVpCKmb3-CNVKk0zPVYODYd6ISsoVH3CPrcaeCPe-s" />
+                        </div>
+                        <div class="aspect-square relative group cursor-pointer">
+                            <img alt="reel" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDR_RF-1FrwiLrOBBkqD0lnBZaFXKnCo4mp2hQr2BnwBa_Nbvf1UksiPSLJvTp_9UwlwPATnm_t2TiXcMC3YhkD-Avvvg13xzCobhpp-DVH-GSvMmlZoEsmxIfyA7o4e_1qhDFd37zya9cHCgvbt9pCFxMsGIXIM3KBJXFNSsho_RxsYO4Nt-_AAOFGy1gt4CKLNJBSloLQdk4Xr4eOnq1rf7haz9_MnRc_-2gNIqkD129Es4kDuNoyAIn28-oaGiClTxDOKBgto7k" />
+                        </div>
+                        <div class="aspect-square relative group cursor-pointer">
+                            <img alt="reel" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuADWB9UWJBDpDqZ1v3uyY6Vu8rwVC1Wv4KxPVxMofwHcvjusBLCOOdRzZVnhijiF5LqoUzUbvh_KWZB79XgxYya9qvQbb8lcdlbrMwaTE7rsBfSxm9n4nXHDt8aksw7p3_UGqlpbHfXgOlfkopsJmk7ZieFs7bPL7cIL4WQrYkL4MtHXxQgVVJJZmWbdmGLn4V5sbDHOHhDPrNtd2L4uOfnzBUPI0OkgL44-nIY74NRfyDAJHe_5Y0SNjuZf11Di-Se70kSSatmpUM" />
+                        </div>
+                    </div>
+                </div>
+                <!-- LinkedIn Feed Redesign -->
+                <div
+                    class="bg-white rounded-[2.5rem] border border-outline-variant/10 p-6 flex flex-col gap-6 shadow-2xl">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 bg-[#0077b5] rounded-lg flex items-center justify-center text-white">
+                                <svg class="w-8 h-8 fill-current" viewbox="0 0 24 24">
+                                    <path
+                                        d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="font-bold">1,250+ Followers</h3>
+                                <p class="text-xs text-on-surface-variant font-mono uppercase tracking-widest">
+                                    Professional Network</p>
+                            </div>
+                        </div>
+                        <button class="text-primary font-bold text-sm">+ Follow</button>
+                    </div>
+                    <!-- LinkedIn Post 1 -->
+                    <div class="bg-surface-container-low p-4 rounded-2xl border border-outline-variant/5">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-10 h-10 rounded-full bg-slate-200">
+                                <img class="w-full h-full rounded-full object-cover"
+                                    src="https://static.wixstatic.com/media/f361dc_4710b182026249938453044439fc67c5~mv2.png/v1/fill/w_665,h_928,fp_0.73_0.34,q_90,enc_avif,quality_auto/rectify234_a_spreadsheet_of_prospects_hovering_in_the_air_in__ee71fcde-cb77-4478-95b7-deaf.png" />
+                            </div>
+                            <div class="text-[11px]">
+                                <div class="font-bold">Ali Ahmed</div>
+                                <div class="text-on-surface-variant">Growth Lead @ DentaSmart AI • 2d</div>
+                            </div>
+                        </div>
+                        <p class="text-sm mb-4 leading-relaxed">AI isn't just about saving time; it's about engineering
+                            retention. We saw a 4x jump in engagement by implementing these 3 neural video frameworks...
+                            <span class="text-primary cursor-pointer">see more</span>
+                        </p>
+                        <div
+                            class="flex items-center justify-between text-[11px] text-on-surface-variant pt-2 border-t border-outline-variant/10">
+                            <div class="flex items-center gap-1">
+                                <span class="flex -space-x-1">
+                                    <span
+                                        class="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center text-[8px] text-white">👍</span>
+                                    <span
+                                        class="w-4 h-4 rounded-full bg-red-500 flex items-center justify-center text-[8px] text-white">❤️</span>
+                                </span>
+                                <span>128 likes</span>
+                            </div>
+                            <div>42 comments • 15 shares</div>
+                        </div>
+                    </div>
+                    <!-- LinkedIn Post 2 -->
+                    <div class="bg-surface-container-low p-4 rounded-2xl border border-outline-variant/5">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-10 h-10 rounded-full bg-slate-200">
+                                <img class="w-full h-full rounded-full object-cover"
+                                    src="https://static.wixstatic.com/media/f361dc_4710b182026249938453044439fc67c5~mv2.png/v1/fill/w_665,h_928,fp_0.73_0.34,q_90,enc_avif,quality_auto/rectify234_a_spreadsheet_of_prospects_hovering_in_the_air_in__ee71fcde-cb77-4478-95b7-deaf.png" />
+                            </div>
+                            <div class="text-[11px]">
+                                <div class="font-bold">Ali Ahmed</div>
+                                <div class="text-on-surface-variant">Growth Lead @ DentaSmart AI • 1w</div>
+                            </div>
+                        </div>
+                        <p class="text-sm mb-4 leading-relaxed">The future of B2B marketing is high-production cinematic
+                            reels. Most brands are still sleeping on this. 🚀</p>
+                        <div class="aspect-video rounded-lg bg-surface-container overflow-hidden mb-4">
+                            <img class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKhl2w4YT0zA1AJVb8618qO-gceGcBs7xJOPrhDAEF039DulYJuToWELdz1eIjQkwm3mHy8CrXqsMeEdrz0VXcLj1ojGQHOUJ-OCEMZupXVtwJsKFUobD14t_2122XmGDOClLtV1TmYJNcKVbsiyo8hLk82E6BRxy5gAYcqW1jorYZOtE8svxzfvEuQJQOtuGowNtY3dPOU7Kom8IPldl5L5cDK-VDo_1AeGVpCKmb3-CNVKk0zPVYODYd6ISsoVH3CPrcaeCPe-s" />
+                        </div>
+                        <div
+                            class="flex items-center justify-between text-[11px] text-on-surface-variant pt-2 border-t border-outline-variant/10">
+                            <div class="flex items-center gap-1">
+                                <span
+                                    class="w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center text-[8px] text-white">👍</span>
+                                <span>85 likes</span>
+                            </div>
+                            <div>12 comments</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="py-24 bg-surface-container-lowest">
-        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center md:px-12 lg:px-20">
+        <div class="editorial-container grid md:grid-cols-2 gap-20 items-center">
             <div class="relative reveal-left">
                 <div class="aspect-[4/5] rounded-[2rem] overflow-hidden bg-surface-container">
                     <img class="w-full h-full object-cover"
@@ -835,10 +1083,89 @@
         </div>
     </section>
 
+
+    <!-- Redesigned Testimonials Section: Glassmorphic Slider -->
+    <section class="py-24 bg-surface-container-low overflow-hidden">
+        <div class="editorial-container">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16 tracking-tight">Client Praise</h2>
+            <div class="testimonial-slider flex gap-8 overflow-x-auto pb-12 no-scrollbar">
+                <!-- Testimonial 1 -->
+                <div
+                    class="testimonial-card flex-shrink-0 w-full md:w-[450px] glass-card p-10 rounded-[3rem] shadow-xl relative group hover:-translate-y-2 transition-transform duration-500">
+                    <span
+                        class="material-symbols-outlined text-primary/10 text-8xl absolute -top-4 -right-4 rotate-12 select-none">format_quote</span>
+                    <div class="relative z-10">
+                        <p class="text-on-surface-variant mb-10 text-xl leading-relaxed italic">"Ali's AI content
+                            workflow completely transformed our social presence. We saw a 300% increase in leads within
+                            the first month. Remarkable efficiency."</p>
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-16 h-16 rounded-full overflow-hidden bg-slate-200 border-2 border-primary-fixed">
+                                <img alt="Sarah Jenkins" class="w-full h-full object-cover"
+                                    src="testimonials/sarah.png" />
+                            </div>
+                            <div>
+                                <div class="font-bold text-lg">Sarah Jenkins</div>
+                                <div class="text-xs font-mono uppercase tracking-widest text-primary font-bold">CEO,
+                                    TechFlow</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Testimonial 2 -->
+                <div
+                    class="testimonial-card flex-shrink-0 w-full md:w-[450px] glass-card p-10 rounded-[3rem] shadow-xl relative group hover:-translate-y-2 transition-transform duration-500">
+                    <span
+                        class="material-symbols-outlined text-primary/10 text-8xl absolute -top-4 -right-4 rotate-12 select-none">format_quote</span>
+                    <div class="relative z-10">
+                        <p class="text-on-surface-variant mb-10 text-xl leading-relaxed italic">"The quality of the AI
+                            reels is indistinguishable from high-end studio productions, but delivered in half the time.
+                            He truly understands the tech."</p>
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-16 h-16 rounded-full overflow-hidden bg-slate-200 border-2 border-secondary-fixed">
+                                <img alt="Michael Chen" class="w-full h-full object-cover"
+                                    src="testimonials/michael.png" />
+                            </div>
+                            <div>
+                                <div class="font-bold text-lg">Michael Chen</div>
+                                <div class="text-xs font-mono uppercase tracking-widest text-primary font-bold">
+                                    Director, Prism Digital</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Testimonial 3 -->
+                <div
+                    class="testimonial-card flex-shrink-0 w-full md:w-[450px] glass-card p-10 rounded-[3rem] shadow-xl relative group hover:-translate-y-2 transition-transform duration-500">
+                    <span
+                        class="material-symbols-outlined text-primary/10 text-8xl absolute -top-4 -right-4 rotate-12 select-none">format_quote</span>
+                    <div class="relative z-10">
+                        <p class="text-on-surface-variant mb-10 text-xl leading-relaxed italic">"Working with Ali is a
+                            game-changer. His growth systems are automated, data-driven, and highly effective for
+                            scaling a beauty brand globally."</p>
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-16 h-16 rounded-full overflow-hidden bg-slate-200 border-2 border-tertiary-fixed">
+                                <img alt="Elena Rodriguez" class="w-full h-full object-cover"
+                                    src="testimonials/elena.png" />
+                            </div>
+                            <div>
+                                <div class="font-bold text-lg">Elena Rodriguez</div>
+                                <div class="text-xs font-mono uppercase tracking-widest text-primary font-bold">Founder,
+                                    Aura Beauty</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Expertise Grid -->
     <section class="py-24 bg-surface section-glow" id="expertise">
         <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
-            <div class="text-center max-w-3xl mx-auto mb-20 reveal">
+            <div class="text-center editorial-container max-w-3xl text-center mx-auto mb-20 reveal">
                 <h2 class="text-3xl md:text-5xl font-bold mb-6">Mastering the Digital Frontier</h2>
                 <p class="text-on-surface-variant text-lg">Specialized skills designed for the next generation of
                     brands.</p>
@@ -1044,83 +1371,99 @@
     </section>
 
     <!-- Contact Section -->
-    <section class="py-24 px-6" id="contact">
+    <section class="py-16 md:py-24 px-4 md:px-6 overflow-x-hidden" id="contact">
         <div
-            class="max-w-5xl mx-auto glass-card rounded-[3rem] p-12 md:p-20 shadow-2xl relative overflow-hidden reveal">
-            <div
-                class="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[120px] -z-10 translate-x-1/2 -translate-y-1/2 animate-pulse-glow">
-            </div>
-            <div class="grid md:grid-cols-2 gap-16">
-                <div>
-                    <h2 class="text-4xl font-bold tracking-tight mb-8">Let's Build Content That Grows Your Brand</h2>
-                    <p class="text-on-surface-variant text-lg mb-12">I'm currently taking on a limited number of new
-                        projects. If you're looking for high-performance creative, let's talk.</p>
-                    <div class="space-y-6">
-                        <div class="flex items-center gap-4 group cursor-pointer">
+            class="max-w-6xl mx-auto bg-white rounded-[2rem] md:rounded-[2.5rem] px-5 py-10 md:p-16 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] border border-slate-100 reveal relative overflow-hidden">
+            <div class="md:grid md:grid-cols-2 md:gap-20">
+                <!-- Left Side: Content & Branding -->
+                <div class="flex flex-col items-center md:items-start text-center md:text-left mb-12 md:mb-0">
+                    <div class="w-full">
+                        <h2
+                            class="text-2xl md:text-5xl font-bold tracking-tight mb-6 md:mb-8 text-slate-900 leading-tight">
+                            Let's Build Content That Grows Your Brand</h2>
+                        <p
+                            class="text-slate-500 text-sm md:text-lg mb-10 md:mb-16 leading-relaxed max-w-sm mx-auto md:mx-0">
+                            I'm currently taking on a limited number of new projects. If you're looking for
+                            high-performance creative, let's talk.</p>
+                    </div>
+
+                    <div class="space-y-8 md:space-y-10 w-full">
+                        <div class="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-5 group w-full">
                             <div
-                                class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                                <span class="material-symbols-outlined text-primary">mail</span>
+                                class="w-14 h-14 rounded-2xl bg-[#7333dd]/10 flex items-center justify-center text-[#7333dd] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#7333dd]/20 shrink-0">
+                                <span class="material-symbols-outlined text-2xl">mail</span>
                             </div>
-                            <div>
-                                <div class="text-xs font-mono uppercase tracking-widest text-on-surface-variant">Email
+                            <div class="flex flex-col items-center md:items-start overflow-hidden w-full">
+                                <div class="text-[9px] font-mono uppercase tracking-[0.2em] text-slate-400 mb-1">Email
                                     Me</div>
-                                <div class="font-bold group-hover:text-primary transition-colors">officialahmedsocials@gmail.com
-                                </div>
+                                <div
+                                    class="font-bold text-slate-900 text-sm md:text-lg break-words w-full px-2 md:px-0">
+                                    officialahmedsocials@gmail.com</div>
                             </div>
                         </div>
-                        <div class="flex items-center gap-4 group cursor-pointer">
+
+                        <div class="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-5 group w-full">
                             <div
-                                class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                                <span class="material-symbols-outlined text-primary">distance</span>
+                                class="w-14 h-14 rounded-2xl bg-[#7333dd]/10 flex items-center justify-center text-[#7333dd] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#7333dd]/20 shrink-0">
+                                <span class="material-symbols-outlined text-2xl">location_on</span>
                             </div>
-                            <div>
-                                <div class="text-xs font-mono uppercase tracking-widest text-on-surface-variant">Based
+                            <div class="flex flex-col items-center md:items-start w-full">
+                                <div class="text-[9px] font-mono uppercase tracking-[0.2em] text-slate-400 mb-1">Based
                                     In</div>
-                                <div class="font-bold group-hover:text-primary transition-colors">Lahore, PK / Global
-                                </div>
+                                <div class="font-bold text-slate-900 text-sm md:text-lg">Lahore, PK / Global</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <form id="contact-form" class="space-y-6">
-                    <div class="grid grid-cols-2 gap-6">
-                        <div>
-                            <label class="block font-mono text-[10px] uppercase tracking-widest mb-2 px-1"
-                                for="contact-name">Name</label>
-                            <input id="contact-name"
-                                class="w-full bg-surface-container-lowest border-none rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary/40 transition-all text-sm outline-none"
-                                placeholder="John Doe" type="text" required />
+
+                <!-- Right Side: Contact Form -->
+                <div class="w-full">
+                    <form id="contact-form" class="space-y-6 md:space-y-8 w-full">
+                        <div class="space-y-6 md:space-y-8 text-left w-full">
+                            <!-- Name / Email Stack on mobile, side-by-side on desktop -->
+                            <div class="w-full">
+                                <label
+                                    class="block font-mono text-[9px] uppercase tracking-[0.2em] text-slate-400 mb-3 px-1"
+                                    for="contact-name">Name</label>
+                                <input type="text" id="contact-name" placeholder="John Doe"
+                                    class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-[#7333dd]/20 transition-all outline-none text-sm">
+                            </div>
+                            <div class="w-full">
+                                <label
+                                    class="block font-mono text-[9px] uppercase tracking-[0.2em] text-slate-400 mb-3 px-1"
+                                    for="contact-email">Email</label>
+                                <input type="email" id="contact-email" placeholder="john@example.com"
+                                    class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-[#7333dd]/20 transition-all outline-none text-sm">
+                            </div>
+
+                            <div class="w-full">
+                                <label
+                                    class="block font-mono text-[9px] uppercase tracking-[0.2em] text-slate-400 mb-3 px-1"
+                                    for="project-type">Project Type</label>
+                                <select id="project-type"
+                                    class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 text-slate-900 focus:ring-2 focus:ring-[#7333dd]/20 transition-all outline-none text-sm cursor-pointer">
+                                    <option>AI Video Campaign</option>
+                                    <option>Full Growth System</option>
+                                    <option>Content Strategy</option>
+                                    <option>Performance Marketing</option>
+                                </select>
+                            </div>
+
+                            <div class="w-full">
+                                <label
+                                    class="block font-mono text-[9px] uppercase tracking-[0.2em] text-slate-400 mb-3 px-1"
+                                    for="contact-message">Message</label>
+                                <textarea id="contact-message" rows="4" placeholder="Tell me about your brand..."
+                                    class="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-[#7333dd]/20 transition-all outline-none resize-none text-sm leading-relaxed"></textarea>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block font-mono text-[10px] uppercase tracking-widest mb-2 px-1"
-                                for="contact-email">Email</label>
-                            <input id="contact-email"
-                                class="w-full bg-surface-container-lowest border-none rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary/40 transition-all text-sm outline-none"
-                                placeholder="john@example.com" type="email" required />
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block font-mono text-[10px] uppercase tracking-widest mb-2 px-1"
-                            for="project-type">Project Type</label>
-                        <select id="project-type"
-                            class="w-full bg-surface-container-lowest border-none rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary/40 transition-all text-sm outline-none">
-                            <option>AI Video Campaign</option>
-                            <option>Full Growth System</option>
-                            <option>Content Strategy</option>
-                            <option>Performance Marketing</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block font-mono text-[10px] uppercase tracking-widest mb-2 px-1"
-                            for="contact-message">Message</label>
-                        <textarea id="contact-message"
-                            class="w-full bg-surface-container-lowest border-none rounded-xl px-4 py-4 focus:ring-2 focus:ring-primary/40 transition-all text-sm outline-none resize-none"
-                            placeholder="Tell me about your brand..." rows="4" required></textarea>
-                    </div>
-                    <button type="submit" id="contact-submit"
-                        class="w-full bg-primary text-on-primary py-5 rounded-2xl font-bold hover:opacity-90 hover:shadow-2xl transition-all shadow-xl shadow-primary/20 active:scale-[0.98]">Send
-                        Inquiry</button>
-                </form>
+
+                        <button type="submit" id="contact-submit"
+                            class="w-full bg-[#7333dd] text-white py-4 md:py-5 rounded-2xl font-bold text-lg shadow-xl shadow-[#7333dd]/20 hover:bg-[#6228c2] hover:shadow-2xl hover:-translate-y-0.5 transition-all outline-none active:scale-[0.98]">
+                            Send Inquiry
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
@@ -1234,9 +1577,9 @@
             </div>
             <div class="flex gap-8">
                 <a class="font-mono text-[10px] uppercase tracking-widest text-slate-500 hover:text-slate-900 hover:translate-y-[-2px] transition-all duration-300"
-                    href="#">LinkedIn</a>
+                    href="https://www.linkedin.com/in/aliahmeddigital/">LinkedIn</a>
                 <a class="font-mono text-[10px] uppercase tracking-widest text-slate-500 hover:text-slate-900 hover:translate-y-[-2px] transition-all duration-300"
-                    href="#">Instagram</a>
+                    href="https://www.instagram.com/ahmedandai/">Instagram</a>
                 <a class="font-mono text-[10px] uppercase tracking-widest text-slate-500 hover:text-slate-900 hover:translate-y-[-2px] transition-all duration-300"
                     href="#">Mail</a>
             </div>
@@ -1713,6 +2056,85 @@
                 }, 1000);
             });
         }
+        // ===== Global Video Management & Random Hero Videos =====
+
+        // 1. Collect a master list of all unique video sources on the page
+        const allVideoSources = Array.from(new Set(
+            Array.from(document.querySelectorAll('video, [data-video-src]'))
+                .map(el => el.src || el.getAttribute('data-video-src'))
+                .filter(src => src && src.trim() !== '')
+        ));
+
+        // 2. Playback logic for all videos
+        document.querySelectorAll('video').forEach(video => {
+            const isRandomHero = video.classList.contains('hero-random-video');
+
+            video.addEventListener('ended', () => {
+                if (isRandomHero && allVideoSources.length > 0) {
+                    // Pick a random video that is different from the current one if possible
+                    let nextSrc;
+                    if (allVideoSources.length > 1) {
+                        do {
+                            nextSrc = allVideoSources[Math.floor(Math.random() * allVideoSources.length)];
+                        } while (nextSrc === video.src || video.src.endsWith(nextSrc));
+                    } else {
+                        nextSrc = allVideoSources[0];
+                    }
+                    video.src = nextSrc;
+                    video.play().catch(e => console.log('Autoplay prevented', e));
+                } else {
+                    // Normal video: just reset and play again
+                    video.currentTime = 0;
+                    video.play().catch(e => console.log('Autoplay prevented', e));
+                }
+            });
+
+            // Force play if paused unintentionally (e.g. browser power saving)
+            video.addEventListener('pause', () => {
+                if (!video.ended) {
+                    video.play().catch(e => console.log('Autoplay prevented', e));
+                }
+            });
+        });
+    </script>
+
+    <!-- ===== UNIVERSAL AURORA HOVER: Auto-applies spinning iridescent border to all cards ===== -->
+    <script>
+        (function applyAurora() {
+            // All selectors that should get the spinning aurora border on hover
+            const targets = [
+                '.glass-card',
+                '.glow-border',
+                '.reel-card',
+                '.testimonial-card',
+                '[class*="rounded-2xl"]',
+                '[class*="rounded-3xl"]',
+                '[class*="rounded-[2rem]"]',
+                '[class*="rounded-[2.5rem]"]',
+                '[class*="rounded-[3rem]"]',
+                'article',
+                '.bg-surface.p-8',
+            ];
+
+            const selector = targets.join(', ');
+            const elements = document.querySelectorAll(selector);
+
+            elements.forEach(el => {
+                // Skip elements that shouldn't have aurora (modals, nav, footer, body-level wrappers)
+                const skip = ['NAV', 'FOOTER', 'HEADER', 'BODY', 'HTML', 'SECTION', 'MAIN'];
+                if (skip.includes(el.tagName)) return;
+                // Skip very large containers (full-width hero etc.)
+                if (el.offsetWidth > window.innerWidth * 0.95) return;
+
+                // Ensure position context exists
+                const computed = window.getComputedStyle(el);
+                if (computed.position === 'static') {
+                    el.style.position = 'relative';
+                }
+
+                el.classList.add('hover-aurora');
+            });
+        })();
     </script>
 </body>
 

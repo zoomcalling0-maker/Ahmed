@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AETHER_VIZ | AI Viral Reels</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.cdnfonts.com/css/berkeley-mono" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#e3e2e3",
+                        "inverse-primary": "#d0bcff",
+                        "primary": "#6b38d4",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#4edea3",
+                        "outline": "#7b7486",
+                        "on-surface": "#1b1c1d",
+                        "surface-bright": "#fbf9fa",
+                        "secondary": "#006c49",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#dbd9db",
+                        "background": "#fbf9fa",
+                        "primary-fixed-dim": "#d0bcff",
+                        "outline-variant": "#cbc3d7",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#8455ef",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#002113",
+                        "on-secondary-container": "#00714d",
+                        "tertiary-fixed-dim": "#ffb3af",
+                        "surface-variant": "#e3e2e3",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#303032",
+                        "surface-container-high": "#e9e8e9",
+                        "secondary-fixed": "#6ffbbe",
+                        "on-secondary-fixed-variant": "#005236",
+                        "surface": "#fbf9fa",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#ad292f",
+                        "tertiary-container": "#cf4244",
+                        "secondary-container": "#6cf8bb",
+                        "on-tertiary-fixed": "#410005",
+                        "inverse-on-surface": "#f2f0f1",
+                        "surface-tint": "#6d3bd7",
+                        "on-primary-fixed-variant": "#5516be",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-tertiary-fixed-variant": "#8e101c",
+                        "on-surface-variant": "#494454",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#1b1c1d",
+                        "on-tertiary-container": "#fffbff",
+                        "on-primary-fixed": "#23005c",
+                        "surface-container-low": "#f5f3f4",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#e9ddff",
+                        "surface-container": "#efedee",
+                        "on-primary-container": "#fffbff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Berkeley Mono", "monospace"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .berkeley-mono { font-family: 'Berkeley Mono', monospace; }
+        .no-line { border: none !important; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .ethereal-shadow {
+            box-shadow: 0 8px 32px 0 rgba(0,0,0,0.04);
+        }
+        /* Mobile menu */
+        .mobile-menu {
+            transform: translateY(-100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mobile-menu.open {
+            transform: translateY(0);
+        }
+        /* Active nav link indicator */
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #6b38d4, #8455ef);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        .nav-link.active {
+            color: #6b38d4;
+            font-weight: 700;
+        }
+
+        /* ===== FUTURISTIC: Dot Grid Canvas ===== */
+        #dot-grid-canvas {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== FUTURISTIC: Floating particles ===== */
+        @keyframes float-particle {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            50% { transform: translateY(-80px) translateX(20px); }
+        }
+
+        .floating-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: #6b38d4;
+            pointer-events: none;
+            animation: float-particle var(--duration, 4s) var(--delay, 0s) ease-in-out infinite;
+        }
+
+        /* ===== FUTURISTIC: Cursor Glow Follower ===== */
+        #cursor-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(107, 56, 212, 0.08) 0%, rgba(107, 56, 212, 0.02) 40%, transparent 70%);
+            pointer-events: none;
+            z-index: 10;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            will-change: transform;
+        }
+
+        #cursor-glow.active {
+            opacity: 1;
+        }
+
+        .mobile-menu {
+            transform: translateY(-100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mobile-menu.open {
+            transform: translateY(0);
+        }
+
+        /* ===== UNIVERSAL: Hover Aurora Border ===== */
+        @property --aurora-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes aurora-spin {
+            from { --aurora-angle: 0deg; }
+            to   { --aurora-angle: 360deg; }
+        }
+
+        .hover-aurora {
+            position: relative;
+        }
+
+        .hover-aurora::before {
+            content: '';
+            position: absolute;
+            inset: -1.5px;
+            border-radius: inherit;
+            padding: 1.5px;
+            background: conic-gradient(
+                from var(--aurora-angle, 0deg),
+                transparent 40%,
+                #7c3aed 55%,
+                #22d3ee 65%,
+                #6cf8bb 72%,
+                transparent 85%
+            );
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .hover-aurora:hover::before {
+            opacity: 1;
+            animation: aurora-spin 3s linear infinite;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+    <!-- Cursor Glow Follower -->
+    <div id="cursor-glow"></div>
+
+    <!-- TopNavBar -->
+    <nav id="main-nav"
+        class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-3 rounded-full mt-4 mx-auto w-[90%] max-w-5xl bg-white/60 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.04)] no-line-rule transition-all duration-300">
+        <a href="index.html" class="text-lg font-bold tracking-tighter text-slate-900">Ali Ahmed</a>
+        <div class="hidden md:flex items-center gap-8">
+            <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
+                href="index.html#work">Work</a>
+            <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
+                href="projects.html">Projects</a>
+            <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
+                href="index.html#expertise">Expertise</a>
+            <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
+                href="index.html#process">Process</a>
+            <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
+                href="index.html#experience">Experience</a>
+            <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
+                href="index.html#tools">Tools</a>
+            <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
+                href="index.html#contact">Contact</a>
+        </div>
+
+        <!-- Mobile menu toggle -->
+        <button id="mobile-menu-btn"
+            class="md:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors"
+            aria-label="Toggle menu">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+
+        <a href="index.html#contact"
+            class="hidden md:inline-block bg-primary hover:opacity-80 text-on-primary px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 active:scale-95">Let's
+            Collaborate</a>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu"
+        class="mobile-menu fixed inset-0 z-[60] bg-white/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 md:hidden">
+        <button id="mobile-menu-close"
+            class="absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors"
+            aria-label="Close menu">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <a class="text-2xl font-bold text-on-surface hover:text-primary transition-colors mobile-nav-link"
+            href="index.html#work">Work</a>
+        <a class="text-2xl font-bold text-on-surface hover:text-primary transition-colors mobile-nav-link"
+            href="projects.html">Projects</a>
+        <a class="text-2xl font-bold text-on-surface hover:text-primary transition-colors mobile-nav-link"
+            href="index.html#expertise">Expertise</a>
+        <a class="text-2xl font-bold text-on-surface hover:text-primary transition-colors mobile-nav-link"
+            href="index.html#process">Process</a>
+        <a class="text-2xl font-bold text-on-surface hover:text-primary transition-colors mobile-nav-link"
+            href="index.html#experience">Experience</a>
+        <a class="text-2xl font-bold text-on-surface hover:text-primary transition-colors mobile-nav-link"
+            href="index.html#tools">Tools</a>
+        <a class="text-2xl font-bold text-on-surface hover:text-primary transition-colors mobile-nav-link"
+            href="index.html#contact">Contact</a>
+        <a href="index.html#contact"
+            class="bg-primary text-on-primary px-8 py-4 rounded-full font-bold text-lg mt-4 hover:opacity-90 transition-all mobile-nav-link">Let's
+            Collaborate</a>
+    </div>
+<main class="relative pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto overflow-hidden">
+    <!-- Futuristic Dot Grid Background -->
+    <canvas id="dot-grid-canvas"></canvas>
+    <!-- Floating particles -->
+    <div class="floating-particle" style="left: 10%; top: 30%; --duration: 5s; --delay: 0s;"></div>
+    <div class="floating-particle" style="left: 85%; top: 50%; --duration: 6s; --delay: 0.5s;"></div>
+    <div class="floating-particle" style="left: 40%; top: 15%; --duration: 8s; --delay: 3s;"></div>
+
+<!-- Header Section -->
+<header class="text-center mb-24 max-w-2xl mx-auto">
+<div class="inline-block py-1 px-3 mb-6 rounded-full bg-surface-container-low text-on-surface-variant berkeley-mono uppercase text-[10px] tracking-widest">
+            Curated Collection
+        </div>
+<h1 class="text-5xl md:text-7xl font-bold tracking-tighter mb-6 text-on-surface">AI Viral Reels</h1>
+<p class="text-lg md:text-xl text-on-surface-variant/80 font-medium leading-relaxed">
+            Exploring the edge of viral storytelling and AI synthesis.
+        </p>
+</header>
+<!-- Asymmetrical Bento-style Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Video Card 1: Neon Genesis (Large) -->
+<div class="group relative md:col-span-8 h-[500px] overflow-hidden rounded-xl bg-surface-container-low ethereal-shadow reel-card cursor-pointer" data-video-src="https://video.wixstatic.com/video/ef49f5_fc1cbb26ca524797a4cf799d9e1893d3/1080p/mp4/file.mp4">
+<div class="absolute inset-0 z-0">
+<video class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 hover-play" src="https://video.wixstatic.com/video/ef49f5_fc1cbb26ca524797a4cf799d9e1893d3/1080p/mp4/file.mp4" autoplay loop muted playsinline></video>
+</div>
+<!-- Glassmorphic Overlay -->
+<div class="absolute inset-0 bg-black/10 transition-all duration-500 flex items-center justify-center z-20 pointer-events-none">
+    <div class="glass-card w-20 h-20 rounded-full border border-white/30 flex items-center justify-center opacity-90 group-hover:opacity-100 transition-all duration-500 scale-90 group-hover:scale-110 shadow-[0_0_40px_rgba(0,0,0,0.3)]">
+        <svg class="w-10 h-10 text-white fill-current" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+        </svg>
+    </div>
+</div>
+<!-- Content Information -->
+<div class="absolute bottom-0 left-0 p-10 z-10 text-white pointer-events-none">
+<div class="flex items-center gap-3 mb-2">
+<span class="berkeley-mono text-[10px] uppercase tracking-widest text-white/70">Series 01</span>
+<span class="berkeley-mono text-[10px] bg-secondary text-white px-2 py-0.5 rounded-full">1.2M Views</span>
+</div>
+<h3 class="text-4xl font-bold tracking-tight">Neon Genesis</h3>
+<p class="text-sm text-white/80 mt-2 max-w-md opacity-0 group-hover:opacity-100 transition-opacity duration-500">A hyper-stylized exploration of cybernetic evolution and light.</p>
+</div>
+<div class="absolute top-6 right-6 z-20 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<button class="glass-card p-2 rounded-lg border border-white/20 text-white hover:bg-white/20 transition-colors card-share-btn" title="Share">
+<span class="material-symbols-outlined text-xl">share</span>
+</button>
+<button class="glass-card p-2 rounded-lg border border-white/20 text-white hover:bg-white/20 transition-colors card-download-btn" title="Download">
+<span class="material-symbols-outlined text-xl">download</span>
+</button>
+</div></div>
+<!-- Video Card 2: Silicon Soul -->
+<div class="group relative md:col-span-4 h-[500px] overflow-hidden rounded-xl bg-surface-container-low ethereal-shadow reel-card cursor-pointer" data-video-src="https://video.wixstatic.com/video/ef49f5_5ef7e0f6cfb4481e8312c0ee50b634f0/1080p/mp4/file.mp4">
+<div class="absolute inset-0 z-0">
+<video class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 hover-play" src="https://video.wixstatic.com/video/ef49f5_5ef7e0f6cfb4481e8312c0ee50b634f0/1080p/mp4/file.mp4" autoplay loop muted playsinline></video>
+</div>
+<div class="absolute inset-0 bg-black/10 transition-all duration-500 flex items-center justify-center z-20 pointer-events-none">
+    <div class="glass-card w-16 h-16 rounded-full border border-white/30 flex items-center justify-center opacity-90 group-hover:opacity-100 transition-all duration-500 scale-90 group-hover:scale-110 shadow-[0_0_40px_rgba(0,0,0,0.3)]">
+        <svg class="w-8 h-8 text-white fill-current" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+        </svg>
+    </div>
+</div>
+<div class="absolute bottom-0 left-0 p-8 z-10 text-white pointer-events-none">
+<div class="flex items-center gap-3 mb-2">
+<span class="berkeley-mono text-[10px] uppercase tracking-widest text-white/70">840K Views</span>
+</div>
+<h3 class="text-3xl font-bold tracking-tight leading-tight">Silicon Soul</h3>
+</div>
+<div class="absolute top-6 right-6 z-20 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<button class="glass-card p-2 rounded-lg border border-white/20 text-white hover:bg-white/20 transition-colors card-share-btn" title="Share">
+<span class="material-symbols-outlined text-xl">share</span>
+</button>
+<button class="glass-card p-2 rounded-lg border border-white/20 text-white hover:bg-white/20 transition-colors card-download-btn" title="Download">
+<span class="material-symbols-outlined text-xl">download</span>
+</button>
+</div></div>
+<!-- Video Card 3: Liquid State -->
+<div class="group relative md:col-span-5 h-[400px] overflow-hidden rounded-xl bg-surface-container-low ethereal-shadow reel-card cursor-pointer" data-video-src="https://video.wixstatic.com/video/ef49f5_36b5257a15094bbda9bd4abb6da0c0f9/1080p/mp4/file.mp4">
+<div class="absolute inset-0 z-0">
+<video class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 hover-play" src="https://video.wixstatic.com/video/ef49f5_36b5257a15094bbda9bd4abb6da0c0f9/1080p/mp4/file.mp4" autoplay loop muted playsinline></video>
+</div>
+<div class="absolute inset-0 bg-black/10 transition-all duration-500 flex items-center justify-center z-20 pointer-events-none">
+    <div class="glass-card w-16 h-16 rounded-full border border-white/30 flex items-center justify-center opacity-90 group-hover:opacity-100 transition-all duration-500 scale-90 group-hover:scale-110 shadow-[0_0_40px_rgba(0,0,0,0.3)]">
+        <svg class="w-8 h-8 text-white fill-current" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+        </svg>
+    </div>
+</div>
+<div class="absolute bottom-0 left-0 p-8 z-10 text-white pointer-events-none">
+<div class="flex items-center gap-3 mb-2">
+<span class="berkeley-mono text-[10px] uppercase tracking-widest text-white/70">2.1M Views</span>
+</div>
+<h3 class="text-3xl font-bold tracking-tight">Liquid State</h3>
+</div>
+<div class="absolute top-6 right-6 z-20 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<button class="glass-card p-2 rounded-lg border border-white/20 text-white hover:bg-white/20 transition-colors card-share-btn" title="Share">
+<span class="material-symbols-outlined text-xl">share</span>
+</button>
+<button class="glass-card p-2 rounded-lg border border-white/20 text-white hover:bg-white/20 transition-colors card-download-btn" title="Download">
+<span class="material-symbols-outlined text-xl">download</span>
+</button>
+</div></div>
+<!-- Video Card 4: Flora Obscura -->
+<div class="group relative md:col-span-7 h-[400px] overflow-hidden rounded-xl bg-surface-container-low ethereal-shadow reel-card cursor-pointer" data-video-src="https://video.wixstatic.com/video/ef49f5_fc1cbb26ca524797a4cf799d9e1893d3/1080p/mp4/file.mp4">
+<div class="absolute inset-0 z-0">
+<video class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 hover-play" src="https://video.wixstatic.com/video/ef49f5_fc1cbb26ca524797a4cf799d9e1893d3/1080p/mp4/file.mp4" autoplay loop muted playsinline></video>
+</div>
+<div class="absolute inset-0 bg-black/10 transition-all duration-500 flex items-center justify-center z-20 pointer-events-none">
+    <div class="glass-card w-16 h-16 rounded-full border border-white/30 flex items-center justify-center opacity-90 group-hover:opacity-100 transition-all duration-500 scale-90 group-hover:scale-110 shadow-[0_0_40px_rgba(0,0,0,0.3)]">
+        <svg class="w-8 h-8 text-white fill-current" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+        </svg>
+    </div>
+</div>
+<div class="absolute bottom-0 left-0 p-8 z-10 text-white pointer-events-none">
+<div class="flex items-center gap-3 mb-2">
+<span class="berkeley-mono text-[10px] uppercase tracking-widest text-white/70">430K Views</span>
+</div>
+<h3 class="text-3xl font-bold tracking-tight">Flora Obscura</h3>
+</div>
+<div class="absolute top-6 right-6 z-20 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<button class="glass-card p-2 rounded-lg border border-white/20 text-white hover:bg-white/20 transition-colors card-share-btn" title="Share">
+<span class="material-symbols-outlined text-xl">share</span>
+</button>
+<button class="glass-card p-2 rounded-lg border border-white/20 text-white hover:bg-white/20 transition-colors card-download-btn" title="Download">
+<span class="material-symbols-outlined text-xl">download</span>
+</button>
+</div></div>
+<!-- Video Card 5: Void Space -->
+<div class="group relative md:col-span-6 h-[450px] overflow-hidden rounded-xl bg-surface-container-low ethereal-shadow reel-card cursor-pointer" data-video-src="https://video.wixstatic.com/video/ef49f5_5ef7e0f6cfb4481e8312c0ee50b634f0/1080p/mp4/file.mp4">
+<div class="absolute inset-0 z-0">
+<video class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 hover-play" src="https://video.wixstatic.com/video/ef49f5_5ef7e0f6cfb4481e8312c0ee50b634f0/1080p/mp4/file.mp4" autoplay loop muted playsinline></video>
+</div>
+<div class="absolute inset-0 bg-black/10 transition-all duration-500 flex items-center justify-center z-20 pointer-events-none">
+    <div class="glass-card w-16 h-16 rounded-full border border-white/30 flex items-center justify-center opacity-90 group-hover:opacity-100 transition-all duration-500 scale-90 group-hover:scale-110 shadow-[0_0_40px_rgba(0,0,0,0.3)]">
+        <svg class="w-8 h-8 text-white fill-current" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+        </svg>
+    </div>
+</div>
+<div class="absolute bottom-0 left-0 p-8 z-10 text-white pointer-events-none">
+<div class="flex items-center gap-3 mb-2">
+<span class="berkeley-mono text-[10px] uppercase tracking-widest text-white/70">920K Views</span>
+</div>
+<h3 class="text-3xl font-bold tracking-tight">Void Space</h3>
+</div>
+<div class="absolute top-6 right-6 z-20 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<button class="glass-card p-2 rounded-lg border border-white/20 text-white hover:bg-white/20 transition-colors card-share-btn" title="Share">
+<span class="material-symbols-outlined text-xl">share</span>
+</button>
+<button class="glass-card p-2 rounded-lg border border-white/20 text-white hover:bg-white/20 transition-colors card-download-btn" title="Download">
+<span class="material-symbols-outlined text-xl">download</span>
+</button>
+</div></div>
+<!-- Video Card 6: Urban Ghost -->
+<div class="group relative md:col-span-6 h-[450px] overflow-hidden rounded-xl bg-surface-container-low ethereal-shadow reel-card cursor-pointer" data-video-src="https://video.wixstatic.com/video/ef49f5_36b5257a15094bbda9bd4abb6da0c0f9/1080p/mp4/file.mp4">
+<div class="absolute inset-0 z-0">
+<video class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 hover-play" src="https://video.wixstatic.com/video/ef49f5_36b5257a15094bbda9bd4abb6da0c0f9/1080p/mp4/file.mp4" autoplay loop muted playsinline></video>
+</div>
+<div class="absolute inset-0 bg-black/10 transition-all duration-500 flex items-center justify-center z-20 pointer-events-none">
+    <div class="glass-card w-16 h-16 rounded-full border border-white/30 flex items-center justify-center opacity-90 group-hover:opacity-100 transition-all duration-500 scale-90 group-hover:scale-110 shadow-[0_0_40px_rgba(0,0,0,0.3)]">
+        <svg class="w-8 h-8 text-white fill-current" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+        </svg>
+    </div>
+</div>
+<div class="absolute bottom-0 left-0 p-8 z-10 text-white pointer-events-none">
+<div class="flex items-center gap-3 mb-2">
+<span class="berkeley-mono text-[10px] uppercase tracking-widest text-white/70">1.7M Views</span>
+</div>
+<h3 class="text-3xl font-bold tracking-tight">Urban Ghost</h3>
+</div>
+<div class="absolute top-6 right-6 z-20 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<button class="glass-card p-2 rounded-lg border border-white/20 text-white hover:bg-white/20 transition-colors card-share-btn" title="Share">
+<span class="material-symbols-outlined text-xl">share</span>
+</button>
+<button class="glass-card p-2 rounded-lg border border-white/20 text-white hover:bg-white/20 transition-colors card-download-btn" title="Download">
+<span class="material-symbols-outlined text-xl">download</span>
+</button>
+</div></div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 py-12 px-8 tonal-shift-bg no-line-rule">
+        <div
+            class="flex flex-col md:flex-row justify-between items-center w-full max-w-7xl mx-auto px-8 md:px-12 lg:px-20">
+            <div class="mb-8 md:mb-0">
+                <div class="text-sm font-black text-slate-900 mb-2">Ali Ahmed</div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-slate-500">© 2024 Ali Ahmed. Built with
+                    intentionality.</p>
+            </div>
+            <div class="flex gap-8">
+                <a class="font-mono text-[10px] uppercase tracking-widest text-slate-500 hover:text-slate-900 hover:translate-y-[-2px] transition-all duration-300"
+                    href="#">LinkedIn</a>
+                <a class="font-mono text-[10px] uppercase tracking-widest text-slate-500 hover:text-slate-900 hover:translate-y-[-2px] transition-all duration-300"
+                    href="#">Instagram</a>
+                <a class="font-mono text-[10px] uppercase tracking-widest text-slate-500 hover:text-slate-900 hover:translate-y-[-2px] transition-all duration-300"
+                    href="#">Mail</a>
+            </div>
+        </div>
+    </footer>
+
+<!-- Custom Glass Video Player Modal -->
+    <div id="video-modal"
+        class="fixed inset-0 z-[100] flex items-center justify-center opacity-0 pointer-events-none transition-all duration-500"
+        style="background: rgba(255,255,255,0.12); backdrop-filter: blur(40px) saturate(1.4); -webkit-backdrop-filter: blur(40px) saturate(1.4);">
+        
+        <!-- Player Container -->
+        <div id="player-container" class="relative z-10 w-full max-w-md mx-auto px-4 select-none" style="max-height: 92vh;">
+            <!-- Close button (Integrated into corner of player area for better UX) -->
+            <button id="video-modal-close"
+                class="absolute -top-12 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all z-20 hover:scale-110 hover:rotate-90 duration-300 bg-white/10 border border-white/20" 
+                aria-label="Close video">
+                <span class="material-symbols-outlined text-white text-xl">close</span>
+            </button>
+
+            <!-- Video wrapper with glow -->
+            <div class="relative rounded-[1.5rem] overflow-hidden shadow-[0_0_80px_rgba(107,56,212,0.2),0_20px_60px_rgba(0,0,0,0.3)]"
+                style="border: 1px solid rgba(255,255,255,0.2);">
+                <video id="modal-video" class="w-full block"
+                    style="max-height: 82vh; object-fit: contain; background: #000;" playsinline></video>
+
+                <!-- Center play/pause overlay -->
+                <div id="center-play-btn"
+                    class="absolute inset-0 flex items-center justify-center cursor-pointer z-10 transition-opacity duration-300">
+                    <div class="w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                        style="background: rgba(107,56,212,0.25); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.12);">
+                        <span class="material-symbols-outlined text-white text-4xl"
+                            style="font-variation-settings: 'FILL' 1" id="center-play-icon">play_arrow</span>
+                    </div>
+                </div>
+
+                <!-- Glass Control Bar -->
+                <div id="video-controls"
+                    class="absolute bottom-0 left-0 right-0 z-20 transition-all duration-500 opacity-100 translate-y-0"
+                    style="background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);">
+                    <!-- Progress Bar -->
+                    <div class="px-5 pt-8">
+                        <div id="progress-container" class="relative w-full h-1.5 rounded-full cursor-pointer group"
+                            style="background: rgba(255,255,255,0.15);">
+                            <div id="progress-buffered" class="absolute top-0 left-0 h-full rounded-full"
+                                style="background: rgba(255,255,255,0.2); width: 0%;"></div>
+                            <div id="progress-bar" class="absolute top-0 left-0 h-full rounded-full transition-none"
+                                style="background: linear-gradient(90deg, #6b38d4, #8455ef); width: 0%;">
+                                <div class="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white shadow-lg shadow-primary/30 opacity-0 group-hover:opacity-100 scale-0 group-hover:scale-100 transition-all duration-200"
+                                    style="transform: translate(50%, -50%)"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controls Row -->
+                    <div class="flex items-center justify-between px-4 py-3">
+                        <!-- Left controls -->
+                        <div class="flex items-center gap-1">
+                            <button id="play-pause-btn"
+                                class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition-all"
+                                aria-label="Play/Pause">
+                                <span class="material-symbols-outlined text-white text-2xl"
+                                    style="font-variation-settings: 'FILL' 1" id="play-pause-icon">play_arrow</span>
+                            </button>
+                            <!-- Volume -->
+                            <div class="flex items-center gap-1 group/vol">
+                                <button id="volume-btn"
+                                    class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 transition-all"
+                                    aria-label="Mute/Unmute">
+                                    <span class="material-symbols-outlined text-white/80 text-xl"
+                                        id="volume-icon">volume_up</span>
+                                </button>
+                                <div class="w-0 group-hover/vol:w-20 overflow-hidden transition-all duration-300">
+                                    <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="1"
+                                        class="w-20 h-1 accent-purple-400 cursor-pointer"
+                                        style="accent-color: #8455ef;" />
+                                </div>
+                            </div>
+                            <!-- Time -->
+                            <span class="font-mono text-[11px] text-white/50 ml-2 tracking-wide"><span
+                                    id="current-time">0:00</span> <span class="text-white/25">/</span> <span
+                                    id="duration-time">0:00</span></span>
+                        </div>
+                        <!-- Right controls -->
+                        <div class="flex items-center gap-1">
+                            <button id="fullscreen-btn"
+                                class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 transition-all"
+                                aria-label="Fullscreen">
+                                <span class="material-symbols-outlined text-white/80 text-xl"
+                                    id="fullscreen-icon">fullscreen</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video title bar -->
+            <div id="video-title-bar" class="flex items-center gap-3 mt-4 px-1">
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-on-surface-variant"
+                    id="modal-video-title">Now Playing</span>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // ===== Mobile Menu =====
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+    if (mobileMenuBtn && mobileMenu && mobileMenuClose) {
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+
+        const closeMenu = () => {
+            mobileMenu.classList.remove('open');
+            document.body.style.overflow = '';
+        };
+
+        mobileMenuClose.addEventListener('click', closeMenu);
+        mobileNavLinks.forEach(link => link.addEventListener('click', closeMenu));
+    }
+
+    // ===== Navbar Shadow on Scroll =====
+    const mainNav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            mainNav.classList.add('shadow-[0_8px_32px_0_rgba(0,0,0,0.08)]');
+            mainNav.classList.remove('shadow-[0_8px_32px_0_rgba(0,0,0,0.04)]');
+        } else {
+            mainNav.classList.remove('shadow-[0_8px_32px_0_rgba(0,0,0,0.08)]');
+            mainNav.classList.add('shadow-[0_8px_32px_0_rgba(0,0,0,0.04)]');
+        }
+    });
+
+    // ===== Cursor Glow =====
+    const cursorGlow = document.getElementById('cursor-glow');
+    if (cursorGlow) {
+        let mouseX = 0, mouseY = 0, glowX = 0, glowY = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            cursorGlow.classList.add('active');
+        });
+        document.addEventListener('mouseleave', () => cursorGlow.classList.remove('active'));
+        const updateGlow = () => {
+            glowX += (mouseX - glowX) * 0.08;
+            glowY += (mouseY - glowY) * 0.08;
+            cursorGlow.style.left = glowX + 'px';
+            cursorGlow.style.top = glowY + 'px';
+            requestAnimationFrame(updateGlow);
+        };
+        updateGlow();
+    }
+
+    // ===== Video Modal =====
+    const videoModal = document.getElementById('video-modal');
+    const modalVideo = document.getElementById('modal-video');
+    const videoModalClose = document.getElementById('video-modal-close');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    const playPauseIcon = document.getElementById('play-pause-icon');
+    const centerPlayBtn = document.getElementById('center-play-btn');
+    const centerPlayIcon = document.getElementById('center-play-icon');
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+    const progressBuffered = document.getElementById('progress-buffered');
+    const currentTimeEl = document.getElementById('current-time');
+    const durationTimeEl = document.getElementById('duration-time');
+    const volumeBtn = document.getElementById('volume-btn');
+    const volumeIcon = document.getElementById('volume-icon');
+    const volumeSlider = document.getElementById('volume-slider');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const videoControls = document.getElementById('video-controls');
+    const modalVideoTitle = document.getElementById('modal-video-title');
+    let controlsTimeout, isDragging = false;
+
+    const formatTime = s => { if (isNaN(s)) return '0:00'; const m = Math.floor(s/60), sec = Math.floor(s%60); return m+':'+(sec<10?'0':'')+sec; };
+
+    const showControls = () => { if(!videoControls) return; videoControls.style.opacity='1'; videoControls.style.transform='translateY(0)'; clearTimeout(controlsTimeout); if(modalVideo && !modalVideo.paused) controlsTimeout=setTimeout(hideControls,3000); };
+    const hideControls = () => { if(!isDragging && videoControls) { videoControls.style.opacity='0'; videoControls.style.transform='translateY(8px)'; if(centerPlayBtn) centerPlayBtn.style.opacity='0'; } };
+
+    window.openVideoModal = (src, title) => {
+        if (!videoModal || !modalVideo) return;
+        modalVideo.src = src;
+        if (modalVideoTitle) modalVideoTitle.textContent = title || 'Now Playing';
+        videoModal.classList.remove('opacity-0', 'pointer-events-none');
+        videoModal.classList.add('opacity-100', 'pointer-events-auto');
+        document.body.style.overflow = 'hidden';
+        if (mainNav) { mainNav.style.opacity = '0'; mainNav.style.pointerEvents = 'none'; }
+        setTimeout(() => { modalVideo.play().catch(() => {}); showControls(); }, 300);
+    };
+
+    const closeVideoModal = () => {
+        if (!videoModal || !modalVideo) return;
+        videoModal.classList.add('opacity-0', 'pointer-events-none');
+        videoModal.classList.remove('opacity-100', 'pointer-events-auto');
+        document.body.style.overflow = '';
+        modalVideo.pause();
+        modalVideo.src = '';
+        if (progressBar) progressBar.style.width = '0%';
+        if (progressBuffered) progressBuffered.style.width = '0%';
+        if (currentTimeEl) currentTimeEl.textContent = '0:00';
+        if (durationTimeEl) durationTimeEl.textContent = '0:00';
+        if (mainNav) { mainNav.style.opacity = '1'; mainNav.style.pointerEvents = 'auto'; }
+    };
+
+    if (videoModalClose) videoModalClose.addEventListener('click', closeVideoModal);
+    if (videoModal) videoModal.addEventListener('click', e => { if (e.target === videoModal) closeVideoModal(); });
+
+    if (playPauseBtn && modalVideo) {
+        playPauseBtn.addEventListener('click', () => modalVideo.paused ? modalVideo.play() : modalVideo.pause());
+        if (centerPlayBtn) centerPlayBtn.addEventListener('click', () => modalVideo.paused ? modalVideo.play() : modalVideo.pause());
+        modalVideo.addEventListener('play', () => { if(playPauseIcon) playPauseIcon.textContent='pause'; if(centerPlayIcon) centerPlayIcon.textContent='pause'; if(centerPlayBtn) centerPlayBtn.style.opacity='0'; showControls(); });
+        modalVideo.addEventListener('pause', () => { if(playPauseIcon) playPauseIcon.textContent='play_arrow'; if(centerPlayIcon) centerPlayIcon.textContent='play_arrow'; if(centerPlayBtn) centerPlayBtn.style.opacity='1'; });
+    }
+
+    if (modalVideo && progressBar && currentTimeEl) {
+        modalVideo.addEventListener('timeupdate', () => { if (!isDragging) { const p=(modalVideo.currentTime/modalVideo.duration)*100; progressBar.style.width=p+'%'; currentTimeEl.textContent=formatTime(modalVideo.currentTime); } });
+        modalVideo.addEventListener('loadedmetadata', () => { if(durationTimeEl) durationTimeEl.textContent=formatTime(modalVideo.duration); });
+        modalVideo.addEventListener('progress', () => { if(modalVideo.buffered.length>0 && progressBuffered) { const b=modalVideo.buffered.end(modalVideo.buffered.length-1); progressBuffered.style.width=(b/modalVideo.duration)*100+'%'; } });
+    }
+
+    if (progressContainer && modalVideo) {
+        const scrub = e => { const r=progressContainer.getBoundingClientRect(); const p=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)); if(progressBar) progressBar.style.width=(p*100)+'%'; modalVideo.currentTime=p*modalVideo.duration; if(currentTimeEl) currentTimeEl.textContent=formatTime(modalVideo.currentTime); };
+        progressContainer.addEventListener('mousedown', e => { isDragging=true; scrub(e); });
+        document.addEventListener('mousemove', e => { if(isDragging) scrub(e); });
+        document.addEventListener('mouseup', () => { isDragging=false; });
+    }
+
+    if (volumeSlider && modalVideo && volumeBtn && volumeIcon) {
+        const updateVolumeIcon = () => { volumeIcon.textContent = (modalVideo.muted||modalVideo.volume===0) ? 'volume_off' : (modalVideo.volume<0.5 ? 'volume_down' : 'volume_up'); };
+        volumeSlider.addEventListener('input', () => { modalVideo.volume=volumeSlider.value; modalVideo.muted=false; updateVolumeIcon(); });
+        volumeBtn.addEventListener('click', () => { modalVideo.muted=!modalVideo.muted; updateVolumeIcon(); });
+    }
+
+    if (fullscreenBtn && modalVideo) {
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                if (modalVideo.requestFullscreen) modalVideo.requestFullscreen();
+                else if (modalVideo.webkitRequestFullscreen) modalVideo.webkitRequestFullscreen();
+                else if (modalVideo.msRequestFullscreen) modalVideo.msRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        });
+    }
+
+    // ===== Reel Card Actions (Share/Download) =====
+    document.querySelectorAll('.card-share-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const card = btn.closest('.reel-card');
+            const title = card.querySelector('h3').textContent;
+            const url = window.location.href;
+            if (navigator.share) {
+                try { await navigator.share({ title: `Ali Ahmed Portfolio - ${title}`, url: url }); } catch(err) {}
+            } else {
+                navigator.clipboard.writeText(url);
+                btn.querySelector('.material-symbols-outlined').textContent = 'check';
+                setTimeout(() => { btn.querySelector('.material-symbols-outlined').textContent = 'share'; }, 2000);
+            }
+        });
+    });
+
+    document.querySelectorAll('.card-download-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const card = btn.closest('.reel-card');
+            const vidSrc = card.querySelector('video').src;
+            const a = document.createElement('a');
+            a.href = vidSrc;
+            a.download = vidSrc.split('/').pop() || 'video.mp4';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+    });
+
+    // ===== Reel Card Clicks =====
+    document.querySelectorAll('.reel-card').forEach(card => {
+        card.addEventListener('click', e => {
+            if (e.target.closest('button')) return;
+            const vid = card.querySelector('video');
+            const title = card.querySelector('h3')?.textContent || 'Now Playing';
+            if (vid && vid.src) window.openVideoModal(vid.src, title);
+        });
+    });
+
+    // ===== Hover Play =====
+    document.querySelectorAll('.hover-play').forEach(vid => {
+        const group = vid.closest('.group');
+        if (group) {
+            group.addEventListener('mouseenter', () => vid.play().catch(() => {}));
+            group.addEventListener('mouseleave', () => vid.pause());
+        }
+    });
+
+    // ===== Dot Grid =====
+    const canvas = document.getElementById('dot-grid-canvas');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        const parent = canvas.parentElement;
+        let dots = [], cX = 0, cY = 0;
+        const init = () => { canvas.width=parent.offsetWidth; canvas.height=parent.offsetHeight; dots=[]; for(let x=0;x<canvas.width;x+=40) for(let y=0;y<canvas.height;y+=40) dots.push({x,y}); };
+        parent.addEventListener('mousemove', e => { const r=canvas.getBoundingClientRect(); cX=e.clientX-r.left; cY=e.clientY-r.top; });
+        const draw = () => { ctx.clearRect(0,0,canvas.width,canvas.height); dots.forEach(d => { const dist=Math.hypot(cX-d.x,cY-d.y); const s=Math.max(0,1-dist/150); ctx.beginPath(); ctx.arc(d.x,d.y,1+s*2,0,Math.PI*2); ctx.fillStyle=`rgba(107,56,212,${0.06+s*0.3})`; ctx.fill(); }); requestAnimationFrame(draw); };
+        init(); draw(); window.addEventListener('resize', init);
+    }
+    </script>
+
+    <!-- ===== UNIVERSAL AURORA HOVER: Auto-applies spinning iridescent border to all cards ===== -->
+    <script>
+        (function applyAurora() {
+            const targets = [
+                '.glass-card',
+                '.reel-card',
+                '[class*="rounded-2xl"]',
+                '[class*="rounded-3xl"]',
+                '[class*="rounded-[2rem]"]',
+                '[class*="rounded-xl"]',
+                'article',
+            ];
+            const elements = document.querySelectorAll(targets.join(', '));
+            elements.forEach(el => {
+                const skip = ['NAV', 'FOOTER', 'HEADER', 'BODY', 'HTML', 'SECTION', 'MAIN'];
+                if (skip.includes(el.tagName)) return;
+                if (el.offsetWidth > window.innerWidth * 0.95) return;
+                const computed = window.getComputedStyle(el);
+                if (computed.position === 'static') el.style.position = 'relative';
+                el.classList.add('hover-aurora');
+            });
+        })();
+    </script>
+
+</body></html>

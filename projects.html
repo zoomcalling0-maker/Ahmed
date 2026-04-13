@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&amp;family=Berkeley+Mono&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#8455ef",
+                        "on-secondary-container": "#00714d",
+                        "outline": "#7b7486",
+                        "on-surface-variant": "#494454",
+                        "tertiary-fixed-dim": "#ffb3af",
+                        "primary": "#6b38d4",
+                        "surface-tint": "#6d3bd7",
+                        "inverse-primary": "#d0bcff",
+                        "primary-fixed": "#e9ddff",
+                        "secondary-fixed": "#6ffbbe",
+                        "primary-fixed-dim": "#d0bcff",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#fbf9fa",
+                        "on-secondary-fixed-variant": "#005236",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#cbc3d7",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#5516be",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface": "#fbf9fa",
+                        "surface-container-high": "#e9e8e9",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-dim": "#dbd9db",
+                        "surface-container": "#efedee",
+                        "surface-container-low": "#f5f3f4",
+                        "on-tertiary-fixed": "#410005",
+                        "tertiary": "#ad292f",
+                        "secondary-container": "#6cf8bb",
+                        "surface-container-highest": "#e3e2e3",
+                        "on-primary": "#ffffff",
+                        "tertiary-container": "#cf4244",
+                        "surface-variant": "#e3e2e3",
+                        "background": "#fbf9fa",
+                        "inverse-on-surface": "#f2f0f1",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#303032",
+                        "on-primary-container": "#fffbff",
+                        "on-surface": "#1b1c1d",
+                        "on-primary-fixed": "#23005c",
+                        "on-tertiary-fixed-variant": "#8e101c",
+                        "on-background": "#1b1c1d",
+                        "secondary": "#006c49",
+                        "on-secondary-fixed": "#002113",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-tertiary-container": "#fffbff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Berkeley Mono"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .ethereal-shadow {
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.04);
+        }
+
+        .editorial-title {
+            letter-spacing: -0.04em;
+        }
+
+        /* Nav links */
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #6b38d4, #8455ef);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: #6b38d4;
+            font-weight: 700;
+        }
+
+        /* Mobile menu */
+        .mobile-menu {
+            transform: translateY(-100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mobile-menu.open {
+            transform: translateY(0);
+        }
+
+        /* ===== Entrance: staggered fade-up ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(28px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* ===== Reel card: subtle lift + shadow bloom on hover ===== */
+        .reel-card {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s ease;
+        }
+
+        .reel-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 48px rgba(107, 56, 212, 0.15),
+                0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ===== UNIVERSAL: Hover Aurora Border ===== */
+        @property --aurora-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes aurora-spin {
+            from {
+                --aurora-angle: 0deg;
+            }
+
+            to {
+                --aurora-angle: 360deg;
+            }
+        }
+
+        .hover-aurora {
+            position: relative;
+        }
+
+        .hover-aurora::before {
+            content: '';
+            position: absolute;
+            inset: -1.5px;
+            border-radius: inherit;
+            padding: 1.5px;
+            background: conic-gradient(from var(--aurora-angle, 0deg),
+                    transparent 40%,
+                    #7c3aed 55%,
+                    #22d3ee 65%,
+                    #6cf8bb 72%,
+                    transparent 85%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .hover-aurora:hover::before {
+            opacity: 1;
+            animation: aurora-spin 3s linear infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-surface text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed overflow-x-hidden">
+    <!-- TopNavBar -->
+    <nav id="main-nav"
+        class="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-6 py-3 rounded-full mt-4 mx-auto w-[90%] max-w-5xl bg-white/60 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.04)] no-line-rule transition-all duration-300">
+        <a href="index.html" class="text-lg font-bold tracking-tighter text-slate-900">Ali Ahmed</a>
+        <div class="hidden md:flex items-center gap-8">
+            <a class="nav-link active text-sm font-sans tracking-tight transition-all duration-300"
+                href="index.html#work">Work</a>
+            <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
+                href="projects.html">Projects</a>
+            <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
+                href="index.html#expertise">Expertise</a>
+            <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
+                href="index.html#process">Process</a>
+            <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
+                href="index.html#experience">Experience</a>
+            <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
+                href="index.html#tools">Tools</a>
+            <a class="nav-link text-slate-600 hover:text-slate-900 font-sans tracking-tight font-medium text-sm transition-all duration-300"
+                href="index.html#contact">Contact</a>
+        </div>
+
+        <!-- Mobile menu toggle -->
+        <button id="mobile-menu-btn"
+            class="md:hidden w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors"
+            aria-label="Toggle menu">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+
+        <a href="index.html#contact"
+            class="hidden md:inline-block bg-primary hover:opacity-80 text-on-primary px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 active:scale-95">Let's
+            Collaborate</a>
+    </nav>
+    <!-- Main Content Canvas -->
+    <main class="pt-32 pb-24 px-8 max-w-7xl mx-auto min-h-screen">
+        <!-- Page Header -->
+        <header class="mb-20">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
+                <div class="max-w-2xl">
+                    <span class="font-label text-[10px] uppercase tracking-[0.2em] text-outline mb-4 block">Archive 2024
+                        / Categories</span>
+                    <h1 class="text-5xl md:text-7xl font-black editorial-title text-on-surface">Curated Motion.</h1>
+                    <p class="mt-6 text-lg text-on-surface-variant font-medium leading-relaxed">
+                        A collection of cinematic experiences defined by precision, rhythm, and visual storytelling.
+                        Explore the spectrum of Aether AI’s creative output.
+                    </p>
+                </div>
+                <div class="flex gap-4">
+                    <span
+                        class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant bg-surface-container px-4 py-2 rounded-full">6
+                        Series</span>
+                    <span
+                        class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant bg-surface-container px-4 py-2 rounded-full">Selected
+                        Works</span>
+                </div>
+            </div>
+        </header>
+        <!-- Category Grid: Asymmetric Bento Influence -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+            <!-- Category Card 1: AI Viral Reels (Large) -->
+            <div class="group relative md:col-span-8 h-[500px] overflow-hidden rounded-xl bg-surface-container-low ethereal-shadow reel-card pointer"
+                style="cursor: pointer;">
+                <div class="absolute inset-0 z-0">
+                    <video
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 hover-play"
+                        src="https://video.wixstatic.com/video/ef49f5_fc1cbb26ca524797a4cf799d9e1893d3/1080p/mp4/file.mp4"
+                        loop muted playsinline></video>
+                </div>
+                <!-- Glassmorphic Overlay -->
+                <div
+                    class="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
+                    <a href="category.html"
+                        class="opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 bg-white/10 text-white backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.15)] hover:bg-white/20 hover:border-white/30 px-8 py-3 rounded-lg font-bold text-sm tracking-tight flex items-center gap-2">
+                        View Project <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+                <!-- Content Information -->
+                <div class="absolute bottom-0 left-0 p-10 z-10 text-white pointer-events-none">
+                    <span
+                        class="font-label text-[10px] uppercase tracking-widest text-white/70 mb-2 block">Experimental</span>
+                    <h3 class="text-4xl font-black editorial-title">AI Viral Reels</h3>
+                </div>
+            </div>
+            <!-- Category Card 2: Startup Explainers -->
+            <div class="group relative md:col-span-4 h-[500px] overflow-hidden rounded-xl bg-surface-container-low ethereal-shadow reel-card pointer"
+                style="cursor: pointer;">
+                <div class="absolute inset-0 z-0">
+                    <video
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 hover-play"
+                        src="https://video.wixstatic.com/video/ef49f5_5ef7e0f6cfb4481e8312c0ee50b634f0/1080p/mp4/file.mp4"
+                        loop muted playsinline></video>
+                </div>
+                <div
+                    class="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
+                    <a href="category.html"
+                        class="opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 bg-white/10 text-white backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.15)] hover:bg-white/20 hover:border-white/30 px-8 py-3 rounded-lg font-bold text-sm tracking-tight flex items-center gap-2">
+                        View More <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="absolute bottom-0 left-0 p-10 z-10 text-white pointer-events-none">
+                    <span class="font-label text-[10px] uppercase tracking-widest text-white/70 mb-2 block">B2B
+                        SaaS</span>
+                    <h3 class="text-3xl font-black editorial-title">Startup Explainers</h3>
+                </div>
+            </div>
+            <!-- Category Card 3: Commercial Campaigns -->
+            <div class="group relative md:col-span-5 h-[400px] overflow-hidden rounded-xl bg-surface-container-low ethereal-shadow reel-card pointer"
+                style="cursor: pointer;">
+                <div class="absolute inset-0 z-0">
+                    <video
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 hover-play"
+                        src="https://video.wixstatic.com/video/ef49f5_36b5257a15094bbda9bd4abb6da0c0f9/1080p/mp4/file.mp4"
+                        loop muted playsinline></video>
+                </div>
+                <div
+                    class="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
+                    <a href="category.html"
+                        class="opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 bg-white/10 text-white backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.15)] hover:bg-white/20 hover:border-white/30 px-8 py-3 rounded-lg font-bold text-sm tracking-tight flex items-center gap-2">
+                        View More <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="absolute bottom-0 left-0 p-10 z-10 text-white pointer-events-none">
+                    <span class="font-label text-[10px] uppercase tracking-widest text-white/70 mb-2 block">Global
+                        Brands</span>
+                    <h3 class="text-3xl font-black editorial-title">Commercial Campaigns</h3>
+                </div>
+            </div>
+            <!-- Category Card 4: Creative Short Films -->
+            <div class="group relative md:col-span-7 h-[400px] overflow-hidden rounded-xl bg-surface-container-low ethereal-shadow reel-card pointer"
+                style="cursor: pointer;">
+                <div class="absolute inset-0 z-0">
+                    <video
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 hover-play"
+                        src="https://video.wixstatic.com/video/ef49f5_fc1cbb26ca524797a4cf799d9e1893d3/1080p/mp4/file.mp4"
+                        loop muted playsinline></video>
+                </div>
+                <div
+                    class="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
+                    <a href="category.html"
+                        class="opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 bg-white/10 text-white backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.15)] hover:bg-white/20 hover:border-white/30 px-8 py-3 rounded-lg font-bold text-sm tracking-tight flex items-center gap-2">
+                        View More <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="absolute bottom-0 left-0 p-10 z-10 text-white pointer-events-none">
+                    <span class="font-label text-[10px] uppercase tracking-widest text-white/70 mb-2 block">Cinematic
+                        Narrative</span>
+                    <h3 class="text-3xl font-black editorial-title">Creative Short Films</h3>
+                </div>
+            </div>
+            <!-- Category Card 5: Social Media Strategy -->
+            <div class="group relative md:col-span-7 h-[400px] overflow-hidden rounded-xl bg-surface-container-low ethereal-shadow reel-card pointer"
+                style="cursor: pointer;">
+                <div class="absolute inset-0 z-0">
+                    <video
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 hover-play"
+                        src="https://video.wixstatic.com/video/ef49f5_5ef7e0f6cfb4481e8312c0ee50b634f0/1080p/mp4/file.mp4"
+                        loop muted playsinline></video>
+                </div>
+                <div
+                    class="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
+                    <a href="category.html"
+                        class="opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 bg-white/10 text-white backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.15)] hover:bg-white/20 hover:border-white/30 px-8 py-3 rounded-lg font-bold text-sm tracking-tight flex items-center gap-2">
+                        View More <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="absolute bottom-0 left-0 p-10 z-10 text-white pointer-events-none">
+                    <span class="font-label text-[10px] uppercase tracking-widest text-white/70 mb-2 block">Engagement
+                        Focus</span>
+                    <h3 class="text-3xl font-black editorial-title">Social Media Strategy</h3>
+                </div>
+            </div>
+            <!-- Category Card 6: B2B Marketing Systems -->
+            <div class="group relative md:col-span-5 h-[400px] overflow-hidden rounded-xl bg-surface-container-low ethereal-shadow reel-card pointer"
+                style="cursor: pointer;">
+                <div class="absolute inset-0 z-0">
+                    <video
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 hover-play"
+                        src="https://video.wixstatic.com/video/ef49f5_36b5257a15094bbda9bd4abb6da0c0f9/1080p/mp4/file.mp4"
+                        loop muted playsinline></video>
+                </div>
+                <div
+                    class="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
+                    <a href="category.html"
+                        class="opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 bg-white/10 text-white backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.15)] hover:bg-white/20 hover:border-white/30 px-8 py-3 rounded-lg font-bold text-sm tracking-tight flex items-center gap-2">
+                        View More <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="absolute bottom-0 left-0 p-10 z-10 text-white pointer-events-none">
+                    <span class="font-label text-[10px] uppercase tracking-widest text-white/70 mb-2 block">Enterprise
+                        Scale</span>
+                    <h3 class="text-3xl font-black editorial-title">B2B Marketing Systems</h3>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-slate-50 py-12 px-8 tonal-shift-bg no-line-rule">
+        <div
+            class="flex flex-col md:flex-row justify-between items-center w-full max-w-7xl mx-auto px-8 md:px-12 lg:px-20">
+            <div class="mb-8 md:mb-0">
+                <div class="text-sm font-black text-slate-900 mb-2">Ali Ahmed</div>
+                <p class="font-mono text-[10px] uppercase tracking-widest text-slate-500">© 2024 Ali Ahmed. Built with
+                    intentionality.</p>
+            </div>
+            <div class="flex gap-8">
+                <a class="font-mono text-[10px] uppercase tracking-widest text-slate-500 hover:text-slate-900 hover:translate-y-[-2px] transition-all duration-300"
+                    href="https://www.linkedin.com/in/aliahmeddigital/">LinkedIn</a>
+                <a class="font-mono text-[10px] uppercase tracking-widest text-slate-500 hover:text-slate-900 hover:translate-y-[-2px] transition-all duration-300"
+                    href="https://www.instagram.com/ahmedandai/">Instagram</a>
+                <a class="font-mono text-[10px] uppercase tracking-widest text-slate-500 hover:text-slate-900 hover:translate-y-[-2px] transition-all duration-300"
+                    href="category.html">Mail</a>
+            </div>
+        </div>
+    </footer>
+    <!-- Custom Glass Video Player Modal -->
+    <div id="video-modal" class="fixed inset-0 z-[100] opacity-0 pointer-events-none transition-all duration-500"
+        style="z-index: 99999;">
+
+        <!-- EXACT Fullscreen Glass Backdrop (Absolute Isolation) -->
+        <div class="fixed inset-0 w-full h-full"
+            style="background: rgba(255,255,255,0.12); backdrop-filter: blur(40px) saturate(1.4); -webkit-backdrop-filter: blur(40px) saturate(1.4); transform: translateZ(0); will-change: transform;">
+        </div>
+
+        <!-- Flex Layout Container Wrapper -->
+        <div id="video-modal-flex-wrapper" class="absolute inset-0 w-full h-full flex items-center justify-center">
+
+            <!-- Close button -->
+            <button id="video-modal-close"
+                class="absolute top-5 right-5 md:top-8 md:right-8 w-11 h-11 rounded-full flex items-center justify-center transition-all z-20 hover:scale-110 hover:rotate-90 duration-300"
+                style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);"
+                aria-label="Close video">
+                <span class="material-symbols-outlined text-white text-xl">close</span>
+            </button>
+
+            <!-- Player Container -->
+            <div id="player-container" class="relative w-full max-w-md mx-auto px-4 select-none"
+                style="max-height: 92vh;">
+                <!-- Video wrapper with glow -->
+                <div class="relative rounded-[1.5rem] overflow-hidden shadow-[0_0_80px_rgba(107,56,212,0.2),0_20px_60px_rgba(0,0,0,0.3)]"
+                    style="border: 1px solid rgba(255,255,255,0.2);">
+                    <video id="modal-video" class="w-full block"
+                        style="max-height: 82vh; object-fit: contain; background: #000;" playsinline></video>
+
+                    <!-- Center play/pause overlay -->
+                    <div id="center-play-btn"
+                        class="absolute inset-0 flex items-center justify-center cursor-pointer z-10 transition-opacity duration-300">
+                        <div class="w-20 h-20 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
+                            style="background: rgba(107,56,212,0.25); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.12);">
+                            <span class="material-symbols-outlined text-white text-4xl"
+                                style="font-variation-settings: 'FILL' 1" id="center-play-icon">play_arrow</span>
+                        </div>
+                    </div>
+
+                    <!-- Glass Control Bar -->
+                    <div id="video-controls"
+                        class="absolute bottom-0 left-0 right-0 z-20 transition-all duration-500 opacity-100 translate-y-0"
+                        style="background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);">
+                        <!-- Progress Bar -->
+                        <div class="px-5 pt-8">
+                            <div id="progress-container" class="relative w-full h-1.5 rounded-full cursor-pointer group"
+                                style="background: rgba(255,255,255,0.15);">
+                                <div id="progress-buffered" class="absolute top-0 left-0 h-full rounded-full"
+                                    style="background: rgba(255,255,255,0.2); width: 0%;"></div>
+                                <div id="progress-bar" class="absolute top-0 left-0 h-full rounded-full transition-none"
+                                    style="background: linear-gradient(90deg, #6b38d4, #8455ef); width: 0%;">
+                                    <div class="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white shadow-lg shadow-primary/30 opacity-0 group-hover:opacity-100 scale-0 group-hover:scale-100 transition-all duration-200"
+                                        style="transform: translate(50%, -50%)"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Controls Row -->
+                        <div class="flex items-center justify-between px-4 py-3">
+                            <!-- Left controls -->
+                            <div class="flex items-center gap-1">
+                                <button id="play-pause-btn"
+                                    class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition-all"
+                                    aria-label="Play/Pause">
+                                    <span class="material-symbols-outlined text-white text-2xl"
+                                        style="font-variation-settings: 'FILL' 1" id="play-pause-icon">play_arrow</span>
+                                </button>
+                                <!-- Volume -->
+                                <div class="flex items-center gap-1 group/vol">
+                                    <button id="volume-btn"
+                                        class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 transition-all"
+                                        aria-label="Mute/Unmute">
+                                        <span class="material-symbols-outlined text-white/80 text-xl"
+                                            id="volume-icon">volume_up</span>
+                                    </button>
+                                    <div class="w-0 group-hover/vol:w-20 overflow-hidden transition-all duration-300">
+                                        <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="1"
+                                            class="w-20 h-1 accent-purple-400 cursor-pointer"
+                                            style="accent-color: #8455ef;" />
+                                    </div>
+                                </div>
+                                <!-- Time -->
+                                <span class="font-mono text-[11px] text-white/50 ml-2 tracking-wide"><span
+                                        id="current-time">0:00</span> <span class="text-white/25">/</span> <span
+                                        id="duration-time">0:00</span></span>
+                            </div>
+                            <!-- Right controls -->
+                            <div class="flex items-center gap-1">
+                                <button id="fullscreen-btn"
+                                    class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 transition-all"
+                                    aria-label="Fullscreen">
+                                    <span class="material-symbols-outlined text-white/80 text-xl"
+                                        id="fullscreen-icon">fullscreen</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video title bar -->
+                <div id="video-title-bar" class="flex items-center gap-3 mt-4 px-1">
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-on-surface-variant"
+                        id="modal-video-title">Now Playing</span>
+                </div>
+            </div>
+        </div> <!-- End of flex-wrapper -->
+
+        <script>
+            // Hover play logic
+            document.querySelectorAll('.hover-play').forEach(vid => {
+                const parentNode = vid.closest('.group');
+                if (parentNode) {
+                    parentNode.addEventListener('mouseenter', () => {
+                        let playPromise = vid.play();
+                        if (playPromise !== undefined) { playPromise.catch(() => { }); }
+                    });
+                    parentNode.addEventListener('mouseleave', () => { vid.pause(); });
+                }
+            });
+
+            // Link all reel-cards to the modal
+            document.querySelectorAll('.reel-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('a')) return;
+                    const vid = card.querySelector('video');
+                    if (vid && typeof openVideoModal === 'function') {
+                        openVideoModal(vid.src);
+                    }
+                });
+            });
+
+            // ===== Aurora border auto-apply =====
+            (function applyAurora() {
+                const targets = ['.reel-card', '.glass-card', '[class*="rounded-xl"]', '[class*="rounded-2xl"]'];
+                document.querySelectorAll(targets.join(', ')).forEach(el => {
+                    const skip = ['NAV', 'FOOTER', 'HEADER', 'BODY', 'HTML', 'SECTION', 'MAIN'];
+                    if (skip.includes(el.tagName)) return;
+                    if (el.offsetWidth > window.innerWidth * 0.95) return;
+                    el.classList.add('hover-aurora');
+                });
+            })();
+
+            // ===== Staggered entrance: fade cards in on load =====
+            (function staggerCards() {
+                const cards = document.querySelectorAll('.reel-card');
+                cards.forEach((card, i) => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(24px)';
+                    card.style.transition = `opacity 0.6s ease ${i * 0.1}s, transform 0.6s cubic-bezier(0.16,1,0.3,1) ${i * 0.1}s`;
+                    // Use intersection observer so cards animate when visible
+                    const obs = new IntersectionObserver(entries => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.style.opacity = '1';
+                                entry.target.style.transform = 'translateY(0)';
+                                obs.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.1 });
+                    obs.observe(card);
+                });
+            })();
+        </script>
+</body>
+
+</html>
